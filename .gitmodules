@@ -1,3 +1,6 @@
 [submodule "ogg-cmake"]
 	path = ogg-cmake
 	url = gogs@eppixx.freeddns.org:eppixx/ogg-cmake.git
+[submodule "opus-cmake"]
+	path = opus-cmake
+	url = gogs@eppixx.freeddns.org:eppixx/opus-cmake.git
