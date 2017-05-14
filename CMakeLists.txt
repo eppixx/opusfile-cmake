@@ -105,7 +105,7 @@ endif(OPUSFILE_ENABLE_DOC)
 
 
 add_library(opusfile STATIC ${OPUSFILE_CODE})
-target_link_libraries(opusfile OPUSFILE_LIBS)
+target_link_libraries(opusfile ${OPUSFILE_LIBS})
 target_compile_definitions(opusfile PRIVATE
   OPUS_BUILD
 )
