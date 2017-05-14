@@ -22,12 +22,8 @@ set(OPUSFILE_LIBS
   m
 )
 
-set(OPUSFILE_INCLUDE_PATH
-  ${OPUS_INCLUDE_PATH}
-  ${OGG_INCLUDE_PATH}
-  ${OPUSFILE_PATH}
+set(OPUSFILE_INCLUDE_DIR
   ${CMAKE_CURRENT_SOURCE_DIR}/opusfile/include
-  CACHE STRING "Include paths for opusfile library"
 )
 
 set(OPUSFILE_HDR
@@ -55,8 +51,6 @@ set(OPUSFILE_CODE
   ${OPUSFILE_HDR}
 )
 
-add_definitions(-DOPUS_BUILD)
-
 if (OPUSFILE_FIXED_POINT)
   add_definitions(-DFIXED_POINT=1 -DDISABLE_FLOAT_API)
 endif (OPUSFILE_FIXED_POINT)
@@ -64,10 +58,6 @@ endif (OPUSFILE_FIXED_POINT)
 # These options affect performance
 # HAVE_LRINTF: Use C99 intrinsics to speed up float-to-int conversion
 add_definitions(-DHAVE_LRINTF)
-
-set(CMAKE_C_FLAGS
-  "${CMAKE_C_FLAGS} -std=c89 -pedantic -Wall -Wextra -Wno-parentheses -Wno-long-long"
-)
 
 if(MINGW)
   set(CMAKE_C_FLAGS
@@ -113,13 +103,26 @@ find_package(Doxygen)
   install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION share/doc)
 endif(OPUSFILE_ENABLE_DOC)
 
-add_definitions(-DOPUS_BUILD)
 
-include_directories(opusfile/include opusfile/src)
-
-include_directories(src)
 add_library(opusfile STATIC ${OPUSFILE_CODE})
-target_link_libraries(opusfile ${OPUSFILE_LIBS} ogg opus m)
+target_link_libraries(opusfile OPUSFILE_LIBS)
+target_compile_definitions(opusfile PRIVATE
+  OPUS_BUILD
+)
+target_compile_options(opusfile PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:GNU>>:
+  -std=c89
+  -pedantic
+  -Wall
+  -Wextra
+  -Wno-parentheses
+  -Wno-long-long
+>)
+target_include_directories(opusfile PRIVATE
+  opusfile/include
+  opusfile/src
+)
+target_include_directories(opusfile PUBLIC OPUSFILE_INCLUDE_DIR)
+
 
 if (OPUSFILE_ENABLE_EXAMPLES)
   add_executable(opusfile_example ${OPUSFILE_EXAMPLE_SRC} opusfile/examples/opusfile_example.c)
