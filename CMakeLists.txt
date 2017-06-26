@@ -10,10 +10,8 @@ option(OPUSFILE_BUILD_EXAMPLES "Enable test examples" YES)
 
 #opus is required to build
 add_subdirectory(opus-cmake)
-include_directories(opus-cmake/opus/include)
 #ogg is required to build
-add_subdirectory(ogg-cmake)
-include_directories(opus-cmake/ogg/include)
+add_subdirectory(ogg)
 
 set(OPUSFILE_LIBS
   ${OPUSFILE_LIBS}
@@ -23,7 +21,7 @@ set(OPUSFILE_LIBS
 )
 
 set(OPUSFILE_INCLUDE_DIR
-  ${CMAKE_CURRENT_SOURCE_DIR}/opusfile/include
+  opusfile/include
 )
 
 set(OPUSFILE_HDR
@@ -107,7 +105,7 @@ endif(OPUSFILE_ENABLE_DOC)
 add_library(opusfile STATIC ${OPUSFILE_CODE})
 target_link_libraries(opusfile ${OPUSFILE_LIBS})
 target_compile_definitions(opusfile PRIVATE
-  OPUS_BUILD
+  ${OPUS_BUILD}
 )
 target_compile_options(opusfile PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:GNU>>:
   -std=c89
@@ -118,10 +116,16 @@ target_compile_options(opusfile PRIVATE $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPIL
   -Wno-long-long
 >)
 target_include_directories(opusfile PRIVATE
-  opusfile/include
-  opusfile/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/opusfile/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/opusfile/src
 )
-target_include_directories(opusfile PUBLIC OPUSFILE_INCLUDE_DIR)
+target_include_directories(opusfile PUBLIC 
+${OPUSFILE_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/opus-cmake/opus/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/ogg/include
+  ${CMAKE_CURRENT_BINARY_DIR}/ogg/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/opusfile/include
+)
 
 
 if (OPUSFILE_ENABLE_EXAMPLES)
