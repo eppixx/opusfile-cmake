@@ -1,6 +1,6 @@
 [submodule "opus-cmake"]
 	path = opus-cmake
-	url = gogs@eppixx.freeddns.org:eppixx/opus-cmake.git
+	url = https://github.com/eppixx/opus-cmake
 [submodule "opusfile"]
 	path = opusfile
 	url = https://github.com/xiph/opusfile
