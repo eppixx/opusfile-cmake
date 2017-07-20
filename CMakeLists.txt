@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(opusfile)
 
+#pull submodule if not already here
+execute_process(COMMAND git submodule update --init --recursive -- .
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
 option(OPUSFILE_USE_ASSERTIONS "Enable assertions in code" NO)
 #option(OPUSFILE_DISABLE_HTPP "Disable HTTP support" YES)
 option(OPUSFILE_FIXED_POINT "Enable Fixed Point API" OFF)
